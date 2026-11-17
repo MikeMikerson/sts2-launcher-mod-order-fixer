@@ -1,0 +1,13 @@
+bin/
+obj/
+dist/
+*.user
+.vs/
+.idea/
+.vscode/
+.DS_Store
+
+# Never commit the game's own files.
+sts2.dll
+0Harmony.dll
+GodotSharp.dll

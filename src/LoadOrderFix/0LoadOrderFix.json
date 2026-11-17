@@ -1,0 +1,12 @@
+{
+  "id": "0LoadOrderFix",
+  "name": "Load Order Fix",
+  "author": "Michael Farrelly",
+  "description": "Loads each mod's dependencies before the mod itself. Fixes mods that fail with \"depends on mods which have not been loaded\" in the Android StS2 Launcher, which loads mods in folder order. Does nothing where the game already sorts mods.",
+  "version": "v0.1.0",
+  "has_pck": false,
+  "has_dll": true,
+  "min_game_version": "0.111.0",
+  "dependencies": [],
+  "affects_gameplay": false
+}

@@ -1,0 +1,20 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+# Read-only: the workflow only builds and runs the tests.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      # Only the tests run here: the mod itself needs the game's files, which are not in the repo.
+      - run: dotnet test tests/LoadOrderFix.Tests

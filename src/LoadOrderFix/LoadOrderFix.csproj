@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- The game runs .NET 9. -->
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <!-- The game loads <id>.dll, so the assembly is named after the manifest id. -->
+    <AssemblyName>0LoadOrderFix</AssemblyName>
+    <RootNamespace>LoadOrderFix</RootNamespace>
+    <!-- Keep in step with "version" in 0LoadOrderFix.json; package.sh checks both match. -->
+    <Version>0.1.0</Version>
+    <!-- The game reads every .json in a mod folder as a manifest, so never ship a deps.json. -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <!--
+      Reproducible output: the same source builds the same DLL, and no path from the build machine
+      ends up in it. Debug symbols are embedded so error reports keep their line numbers.
+    -->
+    <Deterministic>true</Deterministic>
+    <DebugType>embedded</DebugType>
+    <PathMap>$(MSBuildProjectDirectory)=/_/src/LoadOrderFix</PathMap>
+    <!-- Your own copy of the game; the game's files are never part of this repository. -->
+    <Sts2AppPath Condition=" '$(Sts2AppPath)' == '' ">$(HOME)/Library/Application Support/Steam/steamapps/common/Slay the Spire 2/SlayTheSpire2.app</Sts2AppPath>
+    <Sts2DataPath Condition=" '$(Sts2DataPath)' == '' ">$(Sts2AppPath)/Contents/Resources/data_sts2_macos_arm64</Sts2DataPath>
+  </PropertyGroup>
+
+  <!-- The game and Harmony come from the game itself at run time; nothing is copied. -->
+  <ItemGroup>
+    <Reference Include="sts2">
+      <HintPath>$(Sts2DataPath)/sts2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(Sts2DataPath)/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="RequireGame" BeforeTargets="ResolveAssemblyReferences" Condition="!Exists('$(Sts2DataPath)/sts2.dll')">
+    <Error Text="Slay the Spire 2 was not found at $(Sts2DataPath). Pass -p:Sts2DataPath=&lt;the folder holding sts2.dll&gt; (on Windows: &lt;game folder&gt;/data_sts2_windows_x86_64)." />
+  </Target>
+</Project>
